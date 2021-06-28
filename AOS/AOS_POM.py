@@ -148,7 +148,9 @@ class init_Actions_AOS:
         self.wait_homepage_loading()
 
     def login_from_order_payment_page(self, username: str, password: str):
+        self.driver.find_element_by_name("usernameInOrderPayment").click()
         self.driver.find_element_by_name("usernameInOrderPayment").send_keys(username)
+        self.driver.find_element_by_name("passwordInOrderPayment").click()
         self.driver.find_element_by_name("passwordInOrderPayment").send_keys(password)
         self.driver.find_element_by_id("login_btnundefined").click()
 

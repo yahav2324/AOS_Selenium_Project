@@ -242,7 +242,7 @@ class TestAOS(TestCase):
         test10 = init_Actions_AOS(self.driver)
         test10.login("lol123", "Lol123")
         test10.click_user_icon()
-        sign_out_button =self.driver.find_element_by_css_selector(
+        sign_out_button = self.driver.find_element_by_css_selector(
             "[class='option roboto-medium ng-scope'][translate='Sign_out']")
         self.assertIn("Sign out", sign_out_button.text)
 
