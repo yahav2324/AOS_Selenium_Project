@@ -45,24 +45,30 @@ class test1_AOS(TestCase):
         test2 = init_Actions_AOS(self.driver)
         test2.enter_category_from_homepage("laptops")
         test2.choose_product_from_current_category_page("10")
+        name1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
         test2.add_quantity("3")
 
         # add a second product with quantity = 2
         test2.back_to_category_page()
         test2.choose_product_from_current_category_page("7")
+        name2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
         test2.add_quantity("2")
 
-        # add a product with quantity = 2
+        # add a third product with quantity = 2
         test2 = init_Actions_AOS(self.driver)
         test2.back_to_homepage()
         test2.enter_category_from_homepage("mice")
         test2.choose_product_from_current_category_page("30")
+        name3 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
         test2.add_quantity("2")
 
         # check all products added successfully
-        self.driver.find_elements_by_css_selector("h3[class='ng-binding']")
-        self.driver.find_elements_by_css_selector("h3[class='ng-binding']")
-        test2.
+        names = self.driver.find_elements_by_css_selector("h3[class='ng-binding']")
+        quantity_and_color = self.driver.find_elements_by_xpath("//a/label[@class = 'ng-binding']")
+        product3 = f"{names[0]}: quantity is {quantity_and_color[0]}, color is {quantity_and_color[1]} "
+        product2 = f"{names[1]}: quantity is {quantity_and_color[2]}, color is {quantity_and_color[3]} "
+        product1 = f"{names[2]}: quantity is {quantity_and_color[4]}, color is {quantity_and_color[5]} "
+        self.assertIn(name1, product1); self.assertIn()
 
 
     def test3(self):

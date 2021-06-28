@@ -78,7 +78,6 @@ class init_Actions_AOS:
             sum_cart += (int(prices[i].text)*int(quantities[i]))
         return sum_cart
 
-
     def sign_out_button(self):
         self.driver.find_element_by_css_selector('a>div>[translate="Sign_out"]').click()
 
@@ -133,6 +132,7 @@ class init_Actions_AOS:
     def add_quantity(self, num: str):
         self.driver.find_element_by_name("quantity").click()
         self.driver.find_element_by_name("quantity").send_keys(num)
+        self.driver.find_element_by_
         self.driver.find_element_by_name("save_to_cart").click()
 
     def appear_quan_of_prod_in_cart(self):
