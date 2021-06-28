@@ -82,19 +82,11 @@ class init_Actions_AOS:
         """click checkout button after point on cart icon"""
         self.driver.find_element_by_id("checkOutPopUp").click()
 
-    def edit_product(self, num: str):
-        edit = self.driver.find_element_by_css_selector('a[class="edit ng-scope"]')
-        self.driver.execute_script("arguments[0].click();", edit)
-        self.driver.find_element_by_name("quantity").click()
-        self.driver.find_element_by_name("quantity").send_keys(num)
-        self.driver.find_element_by_name("save_to_cart").click()
-        init_Actions_AOS(self.driver).cart_page()
-
-    def edit(self):
+    def edit_products(self):
         edits = self.driver.find_elements_by_xpath(f'//tr/td/span/a[1]')
         for i in range(2):
             edits[i].click()
-            self.add_quantity(str(i + 1))
+            self.add_quantity_and_click_add(str(i + 1))
             self.cart_page()
 
     def return_quantity_cart_products(self, number_of_products_in_cart):
@@ -117,12 +109,6 @@ class init_Actions_AOS:
             list_products.append(product)
         return list_products
 
-        list_products = []
-        for i in range(number_of_products_in_cart):
-            product = {names[i].text: f"price: {prices[i].text}, quantity: {quantities[i].text}"}
-            list_products.append(product)
-        return list_products
-
     def calculate_sum_price_of_cart(self, number_of_products_in_cart):
         prices = self.driver.find_elements_by_xpath("//td[@class='smollCell']/p")
         quantities = self.driver.find_elements_by_css_selector("[class='smollCell quantityMobile']")
@@ -138,7 +124,7 @@ class init_Actions_AOS:
         """
         return self.driver.find_element_by_xpath("//tfoot[@colspan='2']/tr/td/span/label").text
 
-    def add_quantity(self, num: str):
+    def add_quantity_and_click_add(self, num: str):
         self.driver.find_element_by_name("quantity").click()
         self.driver.find_element_by_name("quantity").send_keys(num)
         self.driver.find_element_by_name("save_to_cart").click()
@@ -162,7 +148,9 @@ class init_Actions_AOS:
         self.wait_homepage_loading()
 
     def login_from_order_payment_page(self, username: str, password: str):
+        self.driver.find_element_by_name("usernameInOrderPayment").click()
         self.driver.find_element_by_name("usernameInOrderPayment").send_keys(username)
+        self.driver.find_element_by_name("passwordInOrderPayment").click()
         self.driver.find_element_by_name("passwordInOrderPayment").send_keys(password)
         self.driver.find_element_by_id("login_btnundefined").click()
 

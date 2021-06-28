@@ -26,12 +26,12 @@ class TestAOS(TestCase):
         test1 = init_Actions_AOS(self.driver)
         test1.enter_category_from_homepage("headphones")
         test1.choose_product_from_current_category_page("12")
-        test1.add_quantity("2")
+        test1.add_quantity_and_click_add("2")
 
         # add a second product with quantity = 3
         test1.back_to_category_page()
         test1.choose_product_from_current_category_page("15")
-        test1.add_quantity("3")
+        test1.add_quantity_and_click_add("3")
 
         # check that cart icon appears with 5 products (quantity in total)
         self.assertEqual(test1.total_quan_of_products_in_cart(), "5 Items")
@@ -42,13 +42,13 @@ class TestAOS(TestCase):
         test2.enter_category_from_homepage("laptops")
         test2.choose_product_from_current_category_page("10")
         name1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.add_quantity("3")
+        test2.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
         test2.back_to_category_page()
         test2.choose_product_from_current_category_page("7")
         name2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.add_quantity("2")
+        test2.add_quantity_and_click_add("2")
 
         # add a third product with quantity = 2
         test2 = init_Actions_AOS(self.driver)
@@ -56,7 +56,7 @@ class TestAOS(TestCase):
         test2.enter_category_from_homepage("mice")
         test2.choose_product_from_current_category_page("30")
         name3 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.add_quantity("2")
+        test2.add_quantity_and_click_add("2")
 
         # check all products added successfully
         names = self.driver.find_elements_by_css_selector("h3[class='ng-binding']")
@@ -73,13 +73,13 @@ class TestAOS(TestCase):
         test3.enter_category_from_homepage("speakers")
         test3.choose_product_from_current_category_page("20")
         product1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test3.add_quantity("2")
+        test3.add_quantity_and_click_add("2")
 
         # add a product with quantity of 3
         test3.back_to_category_page()
         test3.choose_product_from_current_category_page("25")
         product2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test3.add_quantity("3")
+        test3.add_quantity_and_click_add("3")
 
         # remove the last product added
         self.driver.find_element_by_class_name("removeProduct iconCss iconX").click()
@@ -92,7 +92,7 @@ class TestAOS(TestCase):
         test4 = init_Actions_AOS(self.driver)
         test4.enter_category_from_homepage("tablets")
         test4.choose_product_from_current_category_page("16")
-        test4.add_quantity("3")
+        test4.add_quantity_and_click_add("3")
         test4.cart_page()
         self.assertEqual(self.driver.find_element_by_css_selector("[class='select  ng-binding']").text, "SHOPPING CART")
 
@@ -101,19 +101,19 @@ class TestAOS(TestCase):
         test5 = init_Actions_AOS(self.driver)
         test5.enter_category_from_homepage("laptops")
         test5.choose_product_from_current_category_page("10")
-        test5.add_quantity("3")
+        test5.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
         test5.back_to_category_page()
         test5.choose_product_from_current_category_page("7")
-        test5.add_quantity("2")
+        test5.add_quantity_and_click_add("2")
 
         # add a product with quantity = 2
         test5 = init_Actions_AOS(self.driver)
         test5.back_to_homepage()
         test5.enter_category_from_homepage("mice")
         test5.choose_product_from_current_category_page("30")
-        test5.add_quantity("2")
+        test5.add_quantity_and_click_add("2")
 
         # move to cart page
         test5.cart_page()
@@ -132,7 +132,7 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).enter_category_from_homepage('speakers')
         init_Actions_AOS(self.driver).choose_product_from_current_category_page('25')
         init_Actions_AOS(self.driver).choose_prod_color('BLACK')
-        init_Actions_AOS(self.driver).add_quantity("3")
+        init_Actions_AOS(self.driver).add_quantity_and_click_add("3")
         # return home page by navigation bar
         init_Actions_AOS(self.driver).back_to_homepage()
         # waiting for loading home page
@@ -141,11 +141,11 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).enter_category_from_homepage('tablets')
         init_Actions_AOS(self.driver).choose_product_from_current_category_page('17')
         init_Actions_AOS(self.driver).choose_prod_color('GRAY')
-        init_Actions_AOS(self.driver).add_quantity("5")
+        init_Actions_AOS(self.driver).add_quantity_and_click_add("5")
         # Enter to cart page
         init_Actions_AOS(self.driver).cart_page()
         # edit product 1
-        init_Actions_AOS(self.driver).edit()
+        init_Actions_AOS(self.driver).edit_products()
         # check after the product changed, if the cart will be changed accordingly
         products = init_Actions_AOS(self.driver).return_quantity_cart_products(2)
         self.assertIn('1', products[1])
@@ -156,7 +156,7 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).enter_category_from_homepage('tablets')
         init_Actions_AOS(self.driver).choose_product_from_current_category_page('18')
         init_Actions_AOS(self.driver).choose_prod_color('GRAY')
-        init_Actions_AOS(self.driver).add_quantity("5")
+        init_Actions_AOS(self.driver).add_quantity_and_click_add("5")
         # return category page by navigation bar
         init_Actions_AOS(self.driver).back_to_category_page()
         # check if the current page is a tablet category
@@ -176,7 +176,7 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).enter_category_from_homepage('mice')
         init_Actions_AOS(self.driver).choose_product_from_current_category_page('27')
         init_Actions_AOS(self.driver).choose_prod_color('PURPLE')
-        init_Actions_AOS(self.driver).add_quantity('3')
+        init_Actions_AOS(self.driver).add_quantity_and_click_add('3')
         init_Actions_AOS(self.driver).point_on_cart_icon()
         init_Actions_AOS(self.driver).click_checkout_button()
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
@@ -206,7 +206,7 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).enter_category_from_homepage('tablets')
         init_Actions_AOS(self.driver).choose_product_from_current_category_page('18')
         init_Actions_AOS(self.driver).choose_prod_color('GRAY')
-        init_Actions_AOS(self.driver).add_quantity("5")
+        init_Actions_AOS(self.driver).add_quantity_and_click_add("5")
 
         init_Actions_AOS(self.driver).point_on_cart_icon()
         init_Actions_AOS(self.driver).click_checkout_button()
@@ -232,7 +232,7 @@ class TestAOS(TestCase):
         test10 = init_Actions_AOS(self.driver)
         test10.login("lol123", "Lol123")
         test10.click_user_icon()
-        sign_out_button =self.driver.find_element_by_css_selector(
+        sign_out_button = self.driver.find_element_by_css_selector(
             "[class='option roboto-medium ng-scope'][translate='Sign_out']")
         self.assertIn("Sign out", sign_out_button.text)
 
@@ -247,4 +247,3 @@ class TestAOS(TestCase):
         # option 2 - this option follows the instruction of using the UnitTest tse methods (assertions)
         # irrelevant as for the "assertion" itself could not fail, only the "find.element" inside the assertion can fail
         # self.assertEqual("SIGN IN", self.driver.find_element_by_id("sign_in_btnundefined").text)
-
