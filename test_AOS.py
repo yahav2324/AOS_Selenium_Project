@@ -29,12 +29,12 @@ class test1_AOS(TestCase):
         test1 = init_Actions_AOS(self.driver)
         test1.enter_category_from_homepage("headphones")
         test1.choose_product_from_current_category_page("12")
-        test1.add_quantity("2")
+        test1.add_quantity_and_click_add("2")
 
         # add a second product with quantity = 3
         test1.back_to_category_page()
         test1.choose_product_from_current_category_page("15")
-        test1.add_quantity("3")
+        test1.add_quantity_and_click_add("3")
 
         # check that cart icon appears with 5 products (quantity in total)
         self.assertEqual(test1.total_quan_of_products_in_cart(), "5 Items")
@@ -46,13 +46,13 @@ class test1_AOS(TestCase):
         test2.enter_category_from_homepage("laptops")
         test2.choose_product_from_current_category_page("10")
         name1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.add_quantity("3")
+        test2.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
         test2.back_to_category_page()
         test2.choose_product_from_current_category_page("7")
         name2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.add_quantity("2")
+        test2.add_quantity_and_click_add("2")
 
         # add a third product with quantity = 2
         test2 = init_Actions_AOS(self.driver)
@@ -60,7 +60,7 @@ class test1_AOS(TestCase):
         test2.enter_category_from_homepage("mice")
         test2.choose_product_from_current_category_page("30")
         name3 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.add_quantity("2")
+        test2.add_quantity_and_click_add("2")
 
         # check all products added successfully
         names = self.driver.find_elements_by_css_selector("h3[class='ng-binding']")
@@ -78,13 +78,13 @@ class test1_AOS(TestCase):
         test3.enter_category_from_homepage("speakers")
         test3.choose_product_from_current_category_page("20")
         product1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test3.add_quantity("2")
+        test3.add_quantity_and_click_add("2")
 
         # add a product with quantity of 3
         test3.back_to_category_page()
         test3.choose_product_from_current_category_page("25")
         product2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test3.add_quantity("3")
+        test3.add_quantity_and_click_add("3")
 
         # remove the last product added
         self.driver.find_element_by_class_name("removeProduct iconCss iconX").click()
@@ -97,7 +97,7 @@ class test1_AOS(TestCase):
         test4 = init_Actions_AOS(self.driver)
         test4.enter_category_from_homepage("tablets")
         test4.choose_product_from_current_category_page("16")
-        test4.add_quantity("3")
+        test4.add_quantity_and_click_add("3")
         test4.cart_page()
         self.assertEqual(self.driver.find_element_by_css_selector("[class='select  ng-binding']").text, "SHOPPING CART")
 
@@ -107,19 +107,19 @@ class test1_AOS(TestCase):
         test5 = init_Actions_AOS(self.driver)
         test5.enter_category_from_homepage("laptops")
         test5.choose_product_from_current_category_page("10")
-        test5.add_quantity("3")
+        test5.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
         test5.back_to_category_page()
         test5.choose_product_from_current_category_page("7")
-        test5.add_quantity("2")
+        test5.add_quantity_and_click_add("2")
 
         # add a product with quantity = 2
         test5 = init_Actions_AOS(self.driver)
         test5.back_to_homepage()
         test5.enter_category_from_homepage("mice")
         test5.choose_product_from_current_category_page("30")
-        test5.add_quantity("2")
+        test5.add_quantity_and_click_add("2")
 
         # move to cart page
         test5.cart_page()
