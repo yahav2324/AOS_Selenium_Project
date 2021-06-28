@@ -5,17 +5,19 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
+from time import sleep
 
 class TestAOS(TestCase):
 
     def setUp(self):
-        # self.driver = webdriver.Chrome(executable_path=r'C:\selenium\chromedriver.exe')
-        self.driver = webdriver.Chrome(executable_path=r'C:\Users\itama\Desktop\selenium\chromedriver.exe')
-        self.driver.implicitly_wait(1000000)
+        self.driver = webdriver.Chrome(executable_path=r'C:\selenium\chromedriver.exe')
+        # self.driver = webdriver.Chrome(executable_path=r'C:\Users\itama\Desktop\selenium\chromedriver.exe')
+        self.driver.implicitly_wait(10)
         self.driver.get('https://www.advantageonlineshopping.com/#/')
         self.driver.maximize_window()
+        self.driver.refresh()
         # no user is active
-        init_Actions_AOS(self.driver).login('lol1234', 'Lol1234')
+        # init_Actions_AOS(self.driver).login('lol1234', 'Lol1234')
         wait = WebDriverWait(self.driver, 20)
         wait.until(EC.visibility_of_element_located((By.ID, "headphonesTxt")))
 
@@ -27,17 +29,17 @@ class TestAOS(TestCase):
         test1 = init_Actions_AOS(self.driver)
         test1.enter_category_from_homepage("headphones")
         test1.choose_product_from_current_category_page("12")
-        test1.choose_prod_color("")
+        test1.choose_prod_color("GRAY")
         test1.add_quantity_and_click_add("2")
 
         # add a second product with quantity = 3
         test1.back_to_category_page()
         test1.choose_product_from_current_category_page("15")
-        test1.choose_prod_color("")
+        test1.choose_prod_color("BLACK")
         test1.add_quantity_and_click_add("3")
 
         # check that cart icon appears with 5 products (quantity in total)
-        self.assertEqual(test1.total_quan_of_products_in_cart(), "5 Items")
+        self.assertIn("5 Items", test1.total_quan_of_products_in_cart())  # new
 
     def test2(self):
         # add a product with quantity = 3
@@ -45,14 +47,14 @@ class TestAOS(TestCase):
         test2.enter_category_from_homepage("laptops")
         test2.choose_product_from_current_category_page("10")
         name1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.choose_prod_color("")
+        test2.choose_prod_color("GRAY")  # new
         test2.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
         test2.back_to_category_page()
         test2.choose_product_from_current_category_page("7")
         name2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.choose_prod_color("")
+        test2.choose_prod_color("GRAY")  # new
         test2.add_quantity_and_click_add("2")
 
         # add a third product with quantity = 2
@@ -61,7 +63,7 @@ class TestAOS(TestCase):
         test2.enter_category_from_homepage("mice")
         test2.choose_product_from_current_category_page("30")
         name3 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
-        test2.choose_prod_color("")
+        test2.choose_prod_color("RED")  # new
         test2.add_quantity_and_click_add("2")
 
         # check all products added successfully
@@ -79,17 +81,19 @@ class TestAOS(TestCase):
         test3.enter_category_from_homepage("speakers")
         test3.choose_product_from_current_category_page("20")
         product1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test3.choose_prod_color("")
+        test3.choose_prod_color("BLACK")
         test3.add_quantity_and_click_add("2")
 
         # add a product with quantity of 3
         test3.back_to_category_page()
         test3.choose_product_from_current_category_page("25")
         product2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test3.choose_prod_color("")
+        test3.choose_prod_color("RED")
         test3.add_quantity_and_click_add("3")
 
         # remove the last product added
+        test3.point_on_cart_icon()
+        sleep(2)
         self.driver.find_element_by_class_name("removeProduct iconCss iconX").click()
 
         # check that only the first product is left in cart
@@ -190,16 +194,17 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).point_on_cart_icon()
         init_Actions_AOS(self.driver).click_checkout_button()
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
-        init_Actions_AOS(self.driver).register('lol51', 'Lol41', 'Lol41', 'lol51@gmail.com')
+        init_Actions_AOS(self.driver).register('lol82', 'Lol41', 'Lol41', 'lol71@gmail.com')  # new
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
         init_Actions_AOS(self.driver).click_next_button_shipdetails_page()
         init_Actions_AOS(self.driver).wait_payment_method_page_loading()
-        init_Actions_AOS(self.driver).choose_safepay_payment_method('ya11', 'Ya11')
+        init_Actions_AOS(self.driver).choose_safepay_payment_method('ya112', 'Ya11')  # new
+        init_Actions_AOS(self.driver).wait_thank_page_appear()  # new
         successfully_order = init_Actions_AOS(self.driver).appear_text_thank_you_page()
         self.assertEqual('Thank you for buying with Advantage', successfully_order)
         id_order = init_Actions_AOS(self.driver).order_number_in_thank_page()
         init_Actions_AOS(self.driver).cart_page()
-
+        init_Actions_AOS(self.driver).wait_cart_page_appear()  # new
         empty_cart = init_Actions_AOS(self.driver).appear_text_cart_empty()
         self.assertEqual('Your shopping cart is empty', empty_cart)
 

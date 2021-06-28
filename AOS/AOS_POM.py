@@ -21,7 +21,10 @@ class init_Actions_AOS:
         self.driver.find_element_by_name("emailRegisterPage").send_keys(email)
         self.driver.find_element_by_name("passwordRegisterPage").send_keys(passw)
         self.driver.find_element_by_name("confirm_passwordRegisterPage").send_keys(repassw)
-        self.driver.find_element_by_css_selector("[class = 'checkboxText roboto-light animated']").click()
+        agree_conditions = self.driver.find_element_by_css_selector("[class = 'checkboxText roboto-light animated']")
+                                                                                            # new
+        self.driver.execute_script("arguments[0].click();", agree_conditions)  # new
+        sleep(3) #  new
         self.driver.find_element_by_id("register_btnundefined").click()
 
     def click_user_icon(self):
@@ -85,7 +88,7 @@ class init_Actions_AOS:
     def edit_products(self):
         edits = self.driver.find_elements_by_xpath(f'//tr/td/span/a[1]')
         for i in range(2):
-            edits[i].click()
+            self.driver(edits[i]).click()
             self.add_quantity_and_click_add(str(i + 1))
             self.cart_page()
 
@@ -122,7 +125,11 @@ class init_Actions_AOS:
         """returns the total number of products in cart (each unit counts as a product)
         :return "x items"
         """
-        return self.driver.find_element_by_xpath("//tfoot[@colspan='2']/tr/td/span/label").text
+        # return self.driver.find_element_by_xpath("//tfoot[@colspan='2']/tr/td/span/label").text
+        self.point_on_cart_icon()  # new
+        sleep(1)  # new
+        return self.driver.find_element_by_xpath('//li/tool-tip-cart/div/table/tfoot/tr/td/'
+                                                 'span/label[@class="roboto-regular ng-binding"]').text  # new
 
     def add_quantity_and_click_add(self, num: str):
         self.driver.find_element_by_name("quantity").click()
@@ -137,7 +144,7 @@ class init_Actions_AOS:
         return self.driver.find_element_by_css_selector('[translate="Thank_you_for_buying_with_Advantage"]').text
 
     def appear_text_cart_empty(self):
-        return self.driver.find_element_by_css_selector('[translate="Your_shopping_cart_is_empty"]').text
+        return self.driver.find_element_by_css_selector('article>div>div>[translate="Your_shopping_cart_is_empty"]').text  # new
 
     def login(self, username: str, password: str):
         """Enter to account page and login to the account"""
@@ -164,7 +171,7 @@ class init_Actions_AOS:
 
     def back_to_category_page(self):
         """go back to home page from every screen"""
-        self.driver.find_element_by_xpath(f'//nav[@class="pages fixedImportant productImage ng-scope"]/a[2]').click()
+        self.driver.back()  # new
 
     def element_in_tablet_category_page(self):
         text = self.driver.find_element_by_class_name('categoryTitle').text
@@ -192,3 +199,7 @@ class init_Actions_AOS:
 
     def wait_account_icon_small_window_appear(self):
         self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '["translate="Sign_out"]')))
+    def wait_thank_page_appear(self):  # new
+        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '[translate="Thank_you_for_buying_with_Advantage"]')))
+    def wait_cart_page_appear(self):
+        self.wait.until(EC.visibility_of_element_located((By.ID, 'menuCart')))  # new
