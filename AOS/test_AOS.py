@@ -227,3 +227,24 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).click_my_orders()
         all_orders = init_Actions_AOS(self.driver).my_orders()
         self.assertIn(id_order, all_orders)
+
+    def test10(self):
+        test10 = init_Actions_AOS(self.driver)
+        test10.login("lol123", "Lol123")
+        test10.click_user_icon()
+        sign_out_button =self.driver.find_element_by_css_selector(
+            "[class='option roboto-medium ng-scope'][translate='Sign_out']")
+        self.assertIn("Sign out", sign_out_button.text)
+
+        test10.sign_out_button()
+        test10.click_user_icon()
+        # option 1
+        try:
+            self.driver.find_element_by_id(self.driver.find_element_by_id("sign_in_btnundefined").text)
+        except:
+            self.fail("the sign in button couldn't be found, therefore the account hasn't logged out properly' ")
+
+        # option 2 - this option follows the instruction of using the UnitTest tse methods (assertions)
+        # irrelevant as for the "assertion" itself could not fail, only the "find.element" inside the assertion can fail
+        # self.assertEqual("SIGN IN", self.driver.find_element_by_id("sign_in_btnundefined").text)
+
