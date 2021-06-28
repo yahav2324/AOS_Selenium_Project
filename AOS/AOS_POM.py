@@ -36,6 +36,7 @@ class init_Actions_AOS:
     def my_orders(self):
        orders = self.driver.find_elements_by_css_selector('div>label[class="left ng-binding"]').text
        return orders
+
     def sign_out_button(self):
         self.driver.find_element_by_css_selector('a>div>[translate="Sign_out"]').click()
 
@@ -44,13 +45,27 @@ class init_Actions_AOS:
         next_button = self.driver.find_element_by_id('next_btn')
         self.driver.execute_script("arguments[0].click();", next_button)
 
-    def choose_payment_method(self, payment_method: str, username: str, password: str):
-        """insert a payment method(insert Small Caps) and fills the fields"""
+    def choose_safepay_payment_method(self, username: str, password: str):
+        """choose a 'safepay' payment method, fills the fields and login 'safepay' account"""
         # version 2, check if the checkbox is selected
-        self.driver.find_element_by_name(payment_method).click()
+        self.driver.find_element_by_name('safepay').click()
         self.driver.find_element_by_name("safepay_username").send_keys(username)
         self.driver.find_element_by_name("safepay_password").send_keys(password)
         self.driver.find_element_by_id("pay_now_btn_SAFEPAY").click()
+
+    def choose_mastercredit_payment_method(self, card_number: str, CVV_number: str, MM: str, YYYY: str, cardholder_name: str, ):
+        """choose a 'mastercredit' payment method, fills the fields and login 'mastercredit' account"""
+        self.driver.find_element_by_name('masterCredit').click()
+        # The company of 'mastercredit' requires the first four digits: '4886'
+        self.driver.find_element_by_id("creditCard").send_keys(card_number)
+        self.driver.find_element_by_name("cvv_number").send_keys(CVV_number)
+        month = Select(self.driver.find_element_by_name("mmListbox"))
+        month.select_by_visible_text(MM)
+        year = Select(self.driver.find_element_by_name("yyyyListbox"))
+        year.select_by_visible_text(YYYY)
+        self.driver.find_element_by_name("cardholder_name").send_keys(cardholder_name)
+        self.driver.find_element_by_id("pay_now_btn_ManualPayment").click()
+
 
     def order_number_in_thank_page(self):
         id_order = self.driver.find_element_by_id("orderNumberLabel").text
@@ -76,16 +91,52 @@ class init_Actions_AOS:
         init_Actions_AOS(self.driver).cart_page()
 
     def edit(self):
-        for i in range(1,3):
-            list1 = []
-            list1.append(self.driver.find_elements_by_xpath(f'//tr[{i}]/td/span/a'))
-            for edit in list1:
-                sleep(5)
-                edit.click()
-                sleep(5)
-                self.cart_page()
+        edits = self.driver.find_elements_by_xpath(f'//tr/td/span/a[1]')
+        for i in range(2):
+            edits[i].click()
+            self.add_quantity(str(i + 1))
+            self.cart_page()
 
+    def return_quantity_cart_products(self, number_of_products_in_cart):
+        quantities = self.driver.find_elements_by_css_selector("[class='smollCell quantityMobile']")
+        names = self.driver.find_elements_by_class_name("roboto-regular productName ng-binding")
+        list_products = []
+        for i in range(number_of_products_in_cart):
+            product = {names[i].text: f"quantity: {quantities[i].text}"}
+            list_products.append(product)
+        return list_products
 
+    def return_info_cart_products(self, number_of_products_in_cart):
+        prices = self.driver.find_elements_by_xpath("//td[@class='smollCell']/p")
+        quantities = self.driver.find_elements_by_css_selector("[class='smollCell quantityMobile']")
+        names = self.driver.find_elements_by_class_name("roboto-regular productName ng-binding")
+
+        list_products = []
+        for i in range(number_of_products_in_cart):
+            product = {names[i].text: f"price: {prices[i].text}, quantity: {quantities[i].text}"}
+            list_products.append(product)
+        return list_products
+
+        list_products = []
+        for i in range(number_of_products_in_cart):
+            product = {names[i].text: f"price: {prices[i].text}, quantity: {quantities[i].text}"}
+            list_products.append(product)
+        return list_products
+
+    def calculate_sum_price_of_cart(self, number_of_products_in_cart):
+        prices = self.driver.find_elements_by_xpath("//td[@class='smollCell']/p")
+        quantities = self.driver.find_elements_by_css_selector("[class='smollCell quantityMobile']")
+
+        sum_cart = 0
+        for i in range(number_of_products_in_cart):
+            sum_cart += (int(prices[i].text) * int(quantities[i]))
+        return sum_cart
+
+    def total_quan_of_products_in_cart(self):
+        """returns the total number of products in cart (each unit counts as a product)
+        :return "x items"
+        """
+        return self.driver.find_element_by_xpath("//tfoot[@colspan='2']/tr/td/span/label").text
 
     def add_quantity(self, num: str):
         self.driver.find_element_by_name("quantity").click()
@@ -109,6 +160,11 @@ class init_Actions_AOS:
         self.driver.find_element_by_name("password").send_keys(password)
         self.driver.find_element_by_id("sign_in_btnundefined").click()
         self.wait_homepage_loading()
+
+    def login_from_order_payment_page(self, username: str, password: str):
+        self.driver.find_element_by_name("usernameInOrderPayment").send_keys(username)
+        self.driver.find_element_by_name("passwordInOrderPayment").send_keys(password)
+        self.driver.find_element_by_id("login_btnundefined").click()
 
     def back_to_homepage(self):
         """go back to home page from every screen"""
