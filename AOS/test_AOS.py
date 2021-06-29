@@ -4,7 +4,6 @@ from AOS.AOS_POM import init_Actions_AOS
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-import locale
 from time import sleep
 
 class TestAOS(TestCase):
@@ -175,30 +174,33 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).add_quantity_and_click_add("5")
         # Enter to cart page
         init_Actions_AOS(self.driver).cart_page()
+        sleep(5)
         # edit product 1
-        init_Actions_AOS(self.driver).edit_products()
+        init_Actions_AOS(self.driver).edit_products(2)
         # check after the product changed, if the cart will be changed accordingly
         products = init_Actions_AOS(self.driver).return_quantity_cart_products(2)
-        self.assertIn('1', products[1])
-        self.assertIn('2', products[2])
+        print(f"products: {products}")
+        self.assertIn('6', products[0])
+        self.assertIn('7', products[1])
+
 
     def test7(self):
-        # choose a product 1
-        init_Actions_AOS(self.driver).enter_category_from_homepage('tablets')
-        init_Actions_AOS(self.driver).choose_product_from_current_category_page('18')
-        init_Actions_AOS(self.driver).choose_prod_color('GRAY')
-        init_Actions_AOS(self.driver).add_quantity_and_click_add("5")
-        # return category page by navigation bar
-        init_Actions_AOS(self.driver).click_back()
-        # check if the current page is a tablet category
-        text_tablets = init_Actions_AOS(self.driver).element_in_tablet_category_page()
-        self.assertEqual('TABLETS', text_tablets)
-        # check if the current page is a homepage
-        init_Actions_AOS(self.driver).click_back()
-        text_in_homep = init_Actions_AOS(self.driver).element_in_homepage()
-        self.assertEqual('HEADPHONES', text_in_homep)
+                # choose a product 1
+                init_Actions_AOS(self.driver).enter_category_from_homepage('tablets')
+                init_Actions_AOS(self.driver).choose_product_from_current_category_page('18')
+                init_Actions_AOS(self.driver).choose_prod_color('GRAY')
+                init_Actions_AOS(self.driver).add_quantity_and_click_add("5")
+                # return category page by navigation bar
+                init_Actions_AOS(self.driver).click_back()
+                # check if the current page is a tablet category
+                text_tablets = init_Actions_AOS(self.driver).element_in_tablet_category_page()
+                self.assertEqual('TABLETS', text_tablets)
+                # check if the current page is a homepage
+                init_Actions_AOS(self.driver).click_back()
+                text_in_homep = init_Actions_AOS(self.driver).element_in_homepage()
+                self.assertEqual('HEADPHONES', text_in_homep)
 
-    # def test7_2(self):
+            # def test7_2(self):
 
     def test8(self):
         init_Actions_AOS(self.driver).wait_homepage_loading()

@@ -93,21 +93,16 @@ class init_Actions_AOS:
         """click checkout button after point on cart icon"""
         self.driver.find_element_by_id("checkOutPopUp").click()
 
-    def edit_products(self):
-        edits = self.driver.find_elements_by_css_selector('[class="edit ng-scope"]')
-        print(edits[0])
-        print()
-        print(edits[1])
-        for i in range(2):
-            sleep(5)
-            edits[i].click()
-            # self.driver.execute_script("arguments[0].click();", edits[i])
-            self.add_quantity_and_click_add(str(i + 1))
-            self.cart_page()
+    def edit_products(self, number_of_products):
+        for edit_number in range(1, number_of_products+1):
+            self.driver.find_element_by_xpath(f'(//span/a[@class="edit ng-scope"])[{str(edit_number)}]').click()
+            self.driver.find_element_by_name("quantity").send_keys(Keys.BACK_SPACE)
+            self.driver.find_element_by_name("quantity").send_keys(5 + edit_number)
+            self.driver.find_element_by_name("save_to_cart").click()
 
     def return_quantity_cart_products(self, number_of_products_in_cart):
         quantities = self.driver.find_elements_by_css_selector("[class='smollCell quantityMobile']")
-        names = self.driver.find_elements_by_class_name("roboto-regular productName ng-binding")
+        names = self.driver.find_elements_by_css_selector('[class = "roboto-regular productName ng-binding"]')
         list_products = []
         for i in range(number_of_products_in_cart):
             product = {names[i].text: f"quantity: {quantities[i].text}"}
