@@ -211,7 +211,7 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).point_on_cart_icon()
         init_Actions_AOS(self.driver).click_checkout_button()
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
-        init_Actions_AOS(self.driver).register('lol56', 'Lol41', 'Lol41', 'lol71@gmail.com')  # new
+        init_Actions_AOS(self.driver).register('lol66', 'Lol41', 'Lol41', 'lol71@gmail.com')  # new
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
         init_Actions_AOS(self.driver).click_next_button_shipdetails_page()
         init_Actions_AOS(self.driver).wait_payment_method_page_loading()
@@ -245,17 +245,20 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
         init_Actions_AOS(self.driver).click_next_button_shipdetails_page()
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
+        # init_Actions_AOS(self.driver).choose_safepay_payment_method('ya112', 'Ya11')
         init_Actions_AOS(self.driver).choose_mastercredit_payment_method('234554322142',
                                                                          '122', '10', '2023', 'jone ver')
         init_Actions_AOS(self.driver).wait_thank_page_appear()
         id_order = init_Actions_AOS(self.driver).order_number_in_thank_page()
 
         init_Actions_AOS(self.driver).cart_page()
+        init_Actions_AOS(self.driver).wait_cart_page_appear()
         empty_cart = init_Actions_AOS(self.driver).appear_text_cart_empty()
         self.assertEqual('Your shopping cart is empty', empty_cart)
 
         init_Actions_AOS(self.driver).click_user_icon()
         init_Actions_AOS(self.driver).click_my_orders()
+        sleep(5)
         all_orders = init_Actions_AOS(self.driver).my_orders()
         self.assertIn(id_order, all_orders)
 

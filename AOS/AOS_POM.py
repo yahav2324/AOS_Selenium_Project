@@ -58,6 +58,7 @@ class init_Actions_AOS:
         self.driver.find_element_by_name('safepay').click()
         self.driver.find_element_by_name("safepay_username").send_keys(username)
         self.driver.find_element_by_name("safepay_password").send_keys(password)
+        self.driver.find_element_by_name("save_safepay").click()
         self.driver.find_element_by_id("pay_now_btn_SAFEPAY").click()
 
     def choose_mastercredit_payment_method(self, card_number: str, CVV_number: str, MM: str, YYYY: str, cardholder_name: str, ):
@@ -72,10 +73,8 @@ class init_Actions_AOS:
         year.select_by_visible_text(YYYY)
         self.driver.find_element_by_name("cardholder_name").send_keys(cardholder_name)
         self.driver.find_element_by_name("save_master_credit").click()
-        pay_button = self.driver.find_element_by_id("pay_now_btn_ManualPayment")
-        self.driver.execute_script("arguments[0].click();", pay_button)  # new
-        # self.driver.find_element_by_id("pay_now_btn_ManualPayment").click()
-        sleep(2)
+        sleep(3)
+        self.driver.find_element_by_id("pay_now_btn_ManualPayment").click()
 
 
     def order_number_in_thank_page(self):
