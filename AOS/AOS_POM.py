@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.select import Select
 from time import sleep
-
+import locale
 
 class init_Actions_AOS:
     """The class include actions from a first steps enter to the site and to register/login to account
@@ -103,14 +103,24 @@ class init_Actions_AOS:
 
     def return_info_cart_products(self, number_of_products_in_cart):
         prices = self.driver.find_elements_by_xpath("//td[@class='smollCell']/p")
-        quantities = self.driver.find_elements_by_css_selector("[class='smollCell quantityMobile']")
-        names = self.driver.find_elements_by_class_name("roboto-regular productName ng-binding")
+        quantities = self.driver.find_elements_by_xpath('//td[@class="smollCell quantityMobile"]/label[@class="ng-binding"]')
+        names = self.driver.find_elements_by_css_selector('[class = "roboto-regular productName ng-binding"]')
 
         list_products = []
-        for i in range(number_of_products_in_cart):
+        for i in range(0, number_of_products_in_cart):
             product = {names[i].text: f"price: {prices[i].text}, quantity: {quantities[i].text}"}
             list_products.append(product)
         return list_products
+
+    def calculate_product_price_with_quantity(self, Quantity: str):
+        price = self.driver.find_element_by_xpath("//article/div/div/h2").text
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF8')
+        price = locale.atof(price.strip("$"))
+        return int(Quantity) * float(price)
+
+    def convert_number_into_money_dollar_format(self, number):
+        locale.setlocale(locale.LC_ALL, 'English_United States.1252')
+        return locale.currency(number, grouping=True)
 
     def calculate_sum_price_of_cart(self, number_of_products_in_cart):
         prices = self.driver.find_elements_by_xpath("//td[@class='smollCell']/p")
@@ -118,7 +128,9 @@ class init_Actions_AOS:
 
         sum_cart = 0
         for i in range(number_of_products_in_cart):
-            sum_cart += (int(prices[i].text) * int(quantities[i]))
+            sum_cart += float(prices[i].text) * float(quantities[i].text)
+        locale.setlocale(locale.LC_ALL, 'English_United States.1252')
+        sum_cart = locale.currency(sum_cart, grouping=True)
         return sum_cart
 
     def total_quan_of_products_in_cart(self):

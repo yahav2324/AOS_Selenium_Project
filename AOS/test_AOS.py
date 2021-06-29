@@ -10,9 +10,9 @@ from time import sleep
 class TestAOS(TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome(executable_path=r'C:\selenium\chromedriver.exe')
-        # self.driver = webdriver.Chrome(executable_path=r'C:\Users\itama\Desktop\selenium\chromedriver.exe')
-        self.driver.implicitly_wait(10)
+        # self.driver = webdriver.Chrome(executable_path=r'C:\selenium\chromedriver.exe')
+        self.driver = webdriver.Chrome(executable_path=r'C:\Users\itama\Desktop\selenium\chromedriver.exe')
+        self.driver.implicitly_wait(15)
         self.driver.get('https://www.advantageonlineshopping.com/#/')
         self.driver.maximize_window()
         self.driver.refresh()
@@ -68,12 +68,16 @@ class TestAOS(TestCase):
 
         # check all products added successfully
         names = self.driver.find_elements_by_css_selector("h3[class='ng-binding']")
-        quantity_and_color = self.driver.find_elements_by_xpath("//a/label[@class = 'ng-binding']")
-        product3 = f"{names[0].text}: quantity is {quantity_and_color[0]}, color is {quantity_and_color[1]} "
-        product2 = f"{names[1].text}: quantity is {quantity_and_color[2]}, color is {quantity_and_color[3]} "
-        product1 = f"{names[2].text}: quantity is {quantity_and_color[4]}, color is {quantity_and_color[5]} "
-        self.assertIn(name1, product1);
-        self.assertIn()
+        quantities = self.driver.find_elements_by_xpath("//a/label[@class = 'ng-binding'][1]")
+        colors = self.driver.find_element_by_css_selector("span[class='ng-binding']")
+        product3 = f"{names[0].text}: quantity is {quantities[0]}, color is {colors[0]} "
+        product2 = f"{names[1].text}: quantity is {quantities[1]}, color is {colors[1]} "
+        product1 = f"{names[2].text}: quantity is {quantities[2]}, color is {colors[2]} "
+        # product 1
+        self.assertIn(name1, product1); self.assertIn("2", product1); self.assertIn("BLACK", product1)
+        self.assertIn(name2, product2); self.assertIn("2", product1); self.assertIn("BLUE", product1)
+        self.assertIn(name3, product3); self.assertIn("2", product1); self.assertIn("BLACK", product1)
+
 
     def test3(self):
         # add a product with quantity of 2
@@ -116,12 +120,15 @@ class TestAOS(TestCase):
         test5 = init_Actions_AOS(self.driver)
         test5.enter_category_from_homepage("laptops")
         test5.choose_product_from_current_category_page("10")
-        test5.choose_prod_color("BLACK")
+        price1 = test5.calculate_product_price_with_quantity("3")
+        test5.choose_prod_color("GRAY")
+
         test5.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
         test5.click_back()
         test5.choose_product_from_current_category_page("7")
+        price2 = test5.calculate_product_price_with_quantity("2")
         test5.add_quantity_and_click_add("2")
 
         # add a third product with quantity = 2
@@ -129,17 +136,25 @@ class TestAOS(TestCase):
         test5.back_to_homepage()
         test5.enter_category_from_homepage("mice")
         test5.choose_product_from_current_category_page("30")
+        price3 = test5.calculate_product_price_with_quantity("2")
         test5.add_quantity_and_click_add("2")
 
         # move to cart page
         test5.cart_page()
 
+        # converting the prices to a final price in money format
+        sum_prices = price1+price2+price3
+        sum_prices = test5.convert_number_into_money_dollar_format(sum_prices)
+
         # summing the prices of the products
-        self.assertIn(locale.currency(test5.calculate_sum_price_of_cart), self.driver.find_element_by_css_selector(
+
+        self.assertIn(sum_prices, self.driver.find_element_by_css_selector(
             "#shoppingCart > table > tfoot > tr:nth-child(1) > td:nth-child(2) > span.roboto-medium.ng-binding").text)
 
         # printing all cart products info
-        test5.return_info_cart_products(3)
+        print("The products in cart: ")
+        for product in test5.return_info_cart_products(3):
+            print(product)
 
     def test6(self):
         """The quantity of the product will be change and the quantity of the product
