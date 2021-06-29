@@ -5,6 +5,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.select import Select
 from time import sleep
 import locale
+from selenium.webdriver.common.keys import Keys
+
 
 class init_Actions_AOS:
     """The class include actions from a first steps enter to the site and to register/login to account
@@ -21,9 +23,8 @@ class init_Actions_AOS:
         self.driver.find_element_by_name("emailRegisterPage").send_keys(email)
         self.driver.find_element_by_name("passwordRegisterPage").send_keys(passw)
         self.driver.find_element_by_name("confirm_passwordRegisterPage").send_keys(repassw)
-        agree_conditions = self.driver.find_element_by_css_selector("[class = 'checkboxText roboto-light animated']")
-                                                                                            # new
-        self.driver.execute_script("arguments[0].click();", agree_conditions)  # new
+        agree_conditions = self.driver.find_element_by_css_selector("[class = 'checkboxText roboto-light animated']")     # new
+        self.driver.execute_script("arguments[0].click();", agree_conditions)
         sleep(3) #  new
         self.driver.find_element_by_id("register_btnundefined").click()
 
@@ -37,8 +38,11 @@ class init_Actions_AOS:
         self.driver.find_element_by_css_selector('a>div[class="mini-title"]>[class="option ng-scope"]').click()
 
     def my_orders(self):
-       orders = self.driver.find_elements_by_css_selector('div>label[class="left ng-binding"]').text
-       return orders
+        orders = self.driver.find_elements_by_xpath('//td[1]/label[@class="ng-binding"]')
+        orders2 = []
+        for value in orders:
+            orders2.append(value.text)
+        return orders2
 
     def sign_out_button(self):
         self.driver.find_element_by_css_selector('a>div>[translate="Sign_out"]').click()
@@ -58,8 +62,8 @@ class init_Actions_AOS:
 
     def choose_mastercredit_payment_method(self, card_number: str, CVV_number: str, MM: str, YYYY: str, cardholder_name: str, ):
         """choose a 'mastercredit' payment method, fills the fields and login 'mastercredit' account"""
-        self.driver.find_element_by_name('masterCredit').click()
         # The company of 'mastercredit' requires the first four digits: '4886'
+        self.driver.find_element_by_name('masterCredit').click()
         self.driver.find_element_by_id("creditCard").send_keys(card_number)
         self.driver.find_element_by_name("cvv_number").send_keys(CVV_number)
         month = Select(self.driver.find_element_by_name("mmListbox"))
@@ -67,7 +71,11 @@ class init_Actions_AOS:
         year = Select(self.driver.find_element_by_name("yyyyListbox"))
         year.select_by_visible_text(YYYY)
         self.driver.find_element_by_name("cardholder_name").send_keys(cardholder_name)
-        self.driver.find_element_by_id("pay_now_btn_ManualPayment").click()
+        self.driver.find_element_by_name("save_master_credit").click()
+        pay_button = self.driver.find_element_by_id("pay_now_btn_ManualPayment")
+        self.driver.execute_script("arguments[0].click();", pay_button)  # new
+        # self.driver.find_element_by_id("pay_now_btn_ManualPayment").click()
+        sleep(2)
 
 
     def order_number_in_thank_page(self):
@@ -86,9 +94,14 @@ class init_Actions_AOS:
         self.driver.find_element_by_id("checkOutPopUp").click()
 
     def edit_products(self):
-        edits = self.driver.find_elements_by_xpath('//tr/td/span/a[1]')
+        edits = self.driver.find_elements_by_css_selector('[class="edit ng-scope"]')
+        print(edits[0])
+        print()
+        print(edits[1])
         for i in range(2):
+            sleep(5)
             edits[i].click()
+            # self.driver.execute_script("arguments[0].click();", edits[i])
             self.add_quantity_and_click_add(str(i + 1))
             self.cart_page()
 
@@ -145,6 +158,7 @@ class init_Actions_AOS:
 
     def add_quantity_and_click_add(self, num: str):
         self.driver.find_element_by_name("quantity").click()
+        self.driver.find_element_by_name("quantity").send_keys(Keys.BACK_SPACE)
         self.driver.find_element_by_name("quantity").send_keys(num)
         self.driver.find_element_by_name("save_to_cart").click()
 

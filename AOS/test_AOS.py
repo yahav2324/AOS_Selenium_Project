@@ -10,8 +10,8 @@ from time import sleep
 class TestAOS(TestCase):
 
     def setUp(self):
-        # self.driver = webdriver.Chrome(executable_path=r'C:\selenium\chromedriver.exe')
-        self.driver = webdriver.Chrome(executable_path=r'C:\Users\itama\Desktop\selenium\chromedriver.exe')
+        self.driver = webdriver.Chrome(executable_path=r'C:\selenium\chromedriver.exe')
+        # self.driver = webdriver.Chrome(executable_path=r'C:\Users\itama\Desktop\selenium\chromedriver.exe')
         self.driver.implicitly_wait(15)
         self.driver.get('https://www.advantageonlineshopping.com/#/')
         self.driver.maximize_window()
@@ -46,14 +46,14 @@ class TestAOS(TestCase):
         test2 = init_Actions_AOS(self.driver)
         test2.enter_category_from_homepage("laptops")
         test2.choose_product_from_current_category_page("10")
-        name1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
+        name1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
         test2.choose_prod_color("GRAY")  # new
         test2.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
         test2.click_back()
         test2.choose_product_from_current_category_page("7")
-        name2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
+        name2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
         test2.choose_prod_color("GRAY")  # new
         test2.add_quantity_and_click_add("2")
 
@@ -62,21 +62,21 @@ class TestAOS(TestCase):
         test2.back_to_homepage()
         test2.enter_category_from_homepage("mice")
         test2.choose_product_from_current_category_page("30")
-        name3 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
+        name3 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
         test2.choose_prod_color("RED")  # new
         test2.add_quantity_and_click_add("2")
 
         # check all products added successfully
         names = self.driver.find_elements_by_css_selector("h3[class='ng-binding']")
         quantities = self.driver.find_elements_by_xpath("//a/label[@class = 'ng-binding'][1]")
-        colors = self.driver.find_element_by_css_selector("span[class='ng-binding']")
-        product3 = f"{names[0].text}: quantity is {quantities[0]}, color is {colors[0]} "
-        product2 = f"{names[1].text}: quantity is {quantities[1]}, color is {colors[1]} "
-        product1 = f"{names[2].text}: quantity is {quantities[2]}, color is {colors[2]} "
+        colors = self.driver.find_elements_by_css_selector("span[class='ng-binding']")
+        product3 = f"{names[0].text}: quantity is {quantities[0].text}, color is {colors[0].text} "
+        product2 = f"{names[1].text}: quantity is {quantities[1].text}, color is {colors[1].text} "
+        product1 = f"{names[2].text}: quantity is {quantities[2].text}, color is {colors[2].text} "
         # product 1
-        self.assertIn(name1, product1); self.assertIn("2", product1); self.assertIn("BLACK", product1)
-        self.assertIn(name2, product2); self.assertIn("2", product1); self.assertIn("BLUE", product1)
-        self.assertIn(name3, product3); self.assertIn("2", product1); self.assertIn("BLACK", product1)
+        self.assertIn(name1, product1); self.assertIn("3", product1); self.assertIn("GRAY", product1)
+        self.assertIn(name2, product2); self.assertIn("2", product2); self.assertIn("GRAY", product2)
+        self.assertIn(name3, product3); self.assertIn("2", product3); self.assertIn("RED", product3)
 
 
     def test3(self):
@@ -201,8 +201,6 @@ class TestAOS(TestCase):
     # def test7_2(self):
 
     def test8(self):
-        init_Actions_AOS(self.driver).click_user_icon()
-        init_Actions_AOS(self.driver).sign_out_button()
         init_Actions_AOS(self.driver).wait_homepage_loading()
         init_Actions_AOS(self.driver).enter_category_from_homepage('mice')
         init_Actions_AOS(self.driver).choose_product_from_current_category_page('27')
@@ -211,7 +209,7 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).point_on_cart_icon()
         init_Actions_AOS(self.driver).click_checkout_button()
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
-        init_Actions_AOS(self.driver).register('lol82', 'Lol41', 'Lol41', 'lol71@gmail.com')  # new
+        init_Actions_AOS(self.driver).register('lol56', 'Lol41', 'Lol41', 'lol71@gmail.com')  # new
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
         init_Actions_AOS(self.driver).click_next_button_shipdetails_page()
         init_Actions_AOS(self.driver).wait_payment_method_page_loading()
@@ -224,17 +222,14 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).wait_cart_page_appear()  # new
         empty_cart = init_Actions_AOS(self.driver).appear_text_cart_empty()
         self.assertEqual('Your shopping cart is empty', empty_cart)
-
         init_Actions_AOS(self.driver).click_user_icon()
         init_Actions_AOS(self.driver).click_my_orders()
+        sleep(5)
         all_orders = init_Actions_AOS(self.driver).my_orders()
+        print(all_orders)
         self.assertIn(id_order, all_orders)
 
     def test9(self):
-        init_Actions_AOS(self.driver).click_user_icon()
-        init_Actions_AOS(self.driver).sign_out_button()
-        init_Actions_AOS(self.driver).wait_homepage_loading()
-
         init_Actions_AOS(self.driver).enter_category_from_homepage('tablets')
         init_Actions_AOS(self.driver).choose_product_from_current_category_page('18')
         init_Actions_AOS(self.driver).choose_prod_color('GRAY')
@@ -244,11 +239,13 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).click_checkout_button()
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
 
-        init_Actions_AOS(self.driver).login_from_order_payment_page('lol123', 'Lol123')
+        init_Actions_AOS(self.driver).login_from_order_payment_page('lol1234', 'Lol1234')
         init_Actions_AOS(self.driver).wait_order_payment_page_loading()
         init_Actions_AOS(self.driver).click_next_button_shipdetails_page()
-        init_Actions_AOS(self.driver).choose_mastercredit_payment_method('234554322345',
-                                                                         '312', '12', '2022', 'jone ver')
+        init_Actions_AOS(self.driver).wait_order_payment_page_loading()
+        init_Actions_AOS(self.driver).choose_mastercredit_payment_method('234554322142',
+                                                                         '122', '10', '2023', 'jone ver')
+        init_Actions_AOS(self.driver).wait_thank_page_appear()
         id_order = init_Actions_AOS(self.driver).order_number_in_thank_page()
 
         init_Actions_AOS(self.driver).cart_page()
@@ -262,7 +259,8 @@ class TestAOS(TestCase):
 
     def test10(self):
         test10 = init_Actions_AOS(self.driver)
-        test10.login("lol123", "Lol123")
+        test10.login("lol1234", "Lol1234")
+        sleep(2)
         test10.click_user_icon()
         sign_out_button = self.driver.find_element_by_css_selector(
             "[class='option roboto-medium ng-scope'][translate='Sign_out']")
@@ -272,7 +270,7 @@ class TestAOS(TestCase):
         test10.click_user_icon()
         # option 1
         try:
-            self.driver.find_element_by_id(self.driver.find_element_by_id("sign_in_btnundefined").text)
+            self.driver.find_element_by_id("sign_in_btnundefined").text
         except:
             self.fail("the sign in button couldn't be found, therefore the account hasn't logged out properly' ")
 
