@@ -4,7 +4,7 @@ from AOS.AOS_POM import init_Actions_AOS
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-
+import locale
 from time import sleep
 
 class TestAOS(TestCase):
@@ -33,7 +33,7 @@ class TestAOS(TestCase):
         test1.add_quantity_and_click_add("2")
 
         # add a second product with quantity = 3
-        test1.back_to_category_page()
+        test1.click_back()
         test1.choose_product_from_current_category_page("15")
         test1.choose_prod_color("BLACK")
         test1.add_quantity_and_click_add("3")
@@ -51,7 +51,7 @@ class TestAOS(TestCase):
         test2.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
-        test2.back_to_category_page()
+        test2.click_back()
         test2.choose_product_from_current_category_page("7")
         name2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']")
         test2.choose_prod_color("GRAY")  # new
@@ -80,27 +80,27 @@ class TestAOS(TestCase):
         test3 = init_Actions_AOS(self.driver)
         test3.enter_category_from_homepage("speakers")
         test3.choose_product_from_current_category_page("20")
-        product1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
+        product1 = self.driver.find_element_by_css_selector('h1[class="roboto-regular screen768 ng-binding"]').text
         test3.choose_prod_color("BLACK")
         test3.add_quantity_and_click_add("2")
 
         # add a product with quantity of 3
-        test3.back_to_category_page()
+        test3.click_back()
         test3.choose_product_from_current_category_page("25")
-        product2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
+        product2 = self.driver.find_element_by_css_selector('h1[class="roboto-regular screen768 ng-binding"]').text
         test3.choose_prod_color("RED")
         test3.add_quantity_and_click_add("3")
 
         # remove the last product added
         test3.point_on_cart_icon() # new
-        self.driver.find_element_by_xpath('//ul/li/tool-tip-cart/div/table/tbody/tr[1]/td/div/' # new
-                                                  'div[@class="removeProduct iconCss iconX"]').click() # new
+        self.driver.find_element_by_xpath('//ul/li/tool-tip-cart/div/table/tbody/tr[1]/td/div/' 
+                                                  'div[@class="removeProduct iconCss iconX"]').click()
         sleep(3)
         # self.driver.find_element_by_class_name("removeProduct iconCss iconX").click()
 
         # check that only the first product is left in cart
-        self.assertNotIn(product2, self.driver.find_element_by_css_selector("h3[class='ng-binding']").text)
-        self.assertIn(product1, self.driver.find_element_by_css_selector("h3[class='ng-binding']").text)
+        self.assertNotIn(product2[0:25], self.driver.find_element_by_css_selector("h3[class='ng-binding']").text)
+        self.assertIn(product1[0:25], self.driver.find_element_by_css_selector("h3[class='ng-binding']").text)
 
     def test4(self):
         test4 = init_Actions_AOS(self.driver)
@@ -120,7 +120,7 @@ class TestAOS(TestCase):
         test5.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2
-        test5.back_to_category_page()
+        test5.click_back()
         test5.choose_product_from_current_category_page("7")
         test5.add_quantity_and_click_add("2")
 
@@ -135,7 +135,7 @@ class TestAOS(TestCase):
         test5.cart_page()
 
         # summing the prices of the products
-        self.assertIn(str(test5.calculate_sum_price_of_cart), self.driver.find_element_by_css_selector(
+        self.assertIn(locale.currency(test5.calculate_sum_price_of_cart), self.driver.find_element_by_css_selector(
             "#shoppingCart > table > tfoot > tr:nth-child(1) > td:nth-child(2) > span.roboto-medium.ng-binding").text)
 
         # printing all cart products info
@@ -174,12 +174,12 @@ class TestAOS(TestCase):
         init_Actions_AOS(self.driver).choose_prod_color('GRAY')
         init_Actions_AOS(self.driver).add_quantity_and_click_add("5")
         # return category page by navigation bar
-        init_Actions_AOS(self.driver).back_to_category_page()
+        init_Actions_AOS(self.driver).click_back()
         # check if the current page is a tablet category
         text_tablets = init_Actions_AOS(self.driver).element_in_tablet_category_page()
         self.assertEqual('TABLETS', text_tablets)
         # check if the current page is a homepage
-        init_Actions_AOS(self.driver).back_to_homepage()
+        init_Actions_AOS(self.driver).click_back()
         text_in_homep = init_Actions_AOS(self.driver).element_in_homepage()
         self.assertEqual('HEADPHONES', text_in_homep)
 

@@ -169,7 +169,7 @@ class init_Actions_AOS:
         text = self.driver.find_element_by_id("headphonesTxt").text
         return text
 
-    def back_to_category_page(self):
+    def click_back(self):
         """go back to home page from every screen"""
         self.driver.back()  # new
 
