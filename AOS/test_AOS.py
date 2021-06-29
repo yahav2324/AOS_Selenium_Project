@@ -92,9 +92,11 @@ class TestAOS(TestCase):
         test3.add_quantity_and_click_add("3")
 
         # remove the last product added
-        test3.point_on_cart_icon()
-        sleep(2)
-        self.driver.find_element_by_class_name("removeProduct iconCss iconX").click()
+        test3.point_on_cart_icon() # new
+        self.driver.find_element_by_xpath('//ul/li/tool-tip-cart/div/table/tbody/tr[1]/td/div/' # new
+                                                  'div[@class="removeProduct iconCss iconX"]').click() # new
+        sleep(3)
+        # self.driver.find_element_by_class_name("removeProduct iconCss iconX").click()
 
         # check that only the first product is left in cart
         self.assertNotIn(product2, self.driver.find_element_by_css_selector("h3[class='ng-binding']").text)
@@ -104,7 +106,7 @@ class TestAOS(TestCase):
         test4 = init_Actions_AOS(self.driver)
         test4.enter_category_from_homepage("tablets")
         test4.choose_product_from_current_category_page("16")
-        test4.choose_prod_color("")
+        test4.choose_prod_color("GRAY")
         test4.add_quantity_and_click_add("3")
         test4.cart_page()
         self.assertEqual(self.driver.find_element_by_css_selector("[class='select  ng-binding']").text, "SHOPPING CART")
@@ -114,7 +116,7 @@ class TestAOS(TestCase):
         test5 = init_Actions_AOS(self.driver)
         test5.enter_category_from_homepage("laptops")
         test5.choose_product_from_current_category_page("10")
-        test5.choose_prod_color("")
+        test5.choose_prod_color("BLACK")
         test5.add_quantity_and_click_add("3")
 
         # add a second product with quantity = 2

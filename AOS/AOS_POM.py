@@ -86,9 +86,9 @@ class init_Actions_AOS:
         self.driver.find_element_by_id("checkOutPopUp").click()
 
     def edit_products(self):
-        edits = self.driver.find_elements_by_xpath(f'//tr/td/span/a[1]')
+        edits = self.driver.find_elements_by_xpath('//tr/td/span/a[1]')
         for i in range(2):
-            self.driver(edits[i]).click()
+            edits[i].click()
             self.add_quantity_and_click_add(str(i + 1))
             self.cart_page()
 
