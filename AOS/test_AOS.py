@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from time import sleep
+from AOS.EXCEL import *
 
 class TestAOS(TestCase):
 
@@ -26,16 +27,16 @@ class TestAOS(TestCase):
     def test1(self):
         # add a product with quantity = 2
         test1 = init_Actions_AOS(self.driver)
-        test1.enter_category_from_homepage("headphones")
-        test1.choose_product_from_current_category_page("12")
-        test1.choose_prod_color("GRAY")
-        test1.add_quantity_and_click_add("2")
+        test1.enter_category_from_homepage(data(0, 0))
+        test1.choose_product_from_current_category_page(data(0, 1))
+        test1.choose_prod_color(data(0, 3))
+        test1.add_quantity_and_click_add(data(0, 2))
 
         # add a second product with quantity = 3
         test1.click_back()
-        test1.choose_product_from_current_category_page("15")
-        test1.choose_prod_color("BLACK")
-        test1.add_quantity_and_click_add("3")
+        test1.choose_product_from_current_category_page(data(0, 4))
+        test1.choose_prod_color(data(0, 6))
+        test1.add_quantity_and_click_add(data(0, 5))
 
         # check that cart icon appears with 5 products (quantity in total)
         self.assertIn("5 Items", test1.total_quan_of_products_in_cart())  # new
@@ -43,27 +44,27 @@ class TestAOS(TestCase):
     def test2(self):
         # add a product with quantity = 3
         test2 = init_Actions_AOS(self.driver)
-        test2.enter_category_from_homepage("laptops")
-        test2.choose_product_from_current_category_page("10")
+        test2.enter_category_from_homepage(data(1, 0))
+        test2.choose_product_from_current_category_page(data(1, 1))
         name1 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test2.choose_prod_color("GRAY")  # new
-        test2.add_quantity_and_click_add("3")
+        test2.choose_prod_color(data(1, 3))
+        test2.add_quantity_and_click_add(data(1, 2))
 
         # add a second product with quantity = 2
         test2.click_back()
-        test2.choose_product_from_current_category_page("7")
+        test2.choose_product_from_current_category_page(data(1, 4))
         name2 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test2.choose_prod_color("GRAY")  # new
-        test2.add_quantity_and_click_add("2")
+        test2.choose_prod_color(data(1, 6))  # new
+        test2.add_quantity_and_click_add(data(1, 5))
 
         # add a third product with quantity = 2
         test2 = init_Actions_AOS(self.driver)
         test2.back_to_homepage()
-        test2.enter_category_from_homepage("mice")
-        test2.choose_product_from_current_category_page("30")
+        test2.enter_category_from_homepage(data(1, 7))
+        test2.choose_product_from_current_category_page(data(1, 8))
         name3 = self.driver.find_element_by_css_selector("h1[class='roboto-regular ng-binding']").text
-        test2.choose_prod_color("RED")  # new
-        test2.add_quantity_and_click_add("2")
+        test2.choose_prod_color(data(1, 10))
+        test2.add_quantity_and_click_add(data(1, 9))
 
         # check all products added successfully
         names = self.driver.find_elements_by_css_selector("h3[class='ng-binding']")
@@ -81,18 +82,18 @@ class TestAOS(TestCase):
     def test3(self):
         # add a product with quantity of 2
         test3 = init_Actions_AOS(self.driver)
-        test3.enter_category_from_homepage("speakers")
-        test3.choose_product_from_current_category_page("20")
+        test3.enter_category_from_homepage(data(2, 0))
+        test3.choose_product_from_current_category_page(data(2, 1))
         product1 = self.driver.find_element_by_css_selector('h1[class="roboto-regular screen768 ng-binding"]').text
-        test3.choose_prod_color("BLACK")
-        test3.add_quantity_and_click_add("2")
+        test3.choose_prod_color(data(2, 3))
+        test3.add_quantity_and_click_add(data(2, 2))
 
         # add a product with quantity of 3
         test3.click_back()
-        test3.choose_product_from_current_category_page("25")
+        test3.choose_product_from_current_category_page(data(2, 4))
         product2 = self.driver.find_element_by_css_selector('h1[class="roboto-regular screen768 ng-binding"]').text
-        test3.choose_prod_color("RED")
-        test3.add_quantity_and_click_add("3")
+        test3.choose_prod_color(data(2, 6))
+        test3.add_quantity_and_click_add(data(2, 5))
 
         # remove the last product added
         test3.point_on_cart_icon() # new
@@ -107,36 +108,39 @@ class TestAOS(TestCase):
 
     def test4(self):
         test4 = init_Actions_AOS(self.driver)
-        test4.enter_category_from_homepage("tablets")
-        test4.choose_product_from_current_category_page("16")
-        test4.choose_prod_color("GRAY")
-        test4.add_quantity_and_click_add("3")
+        test4.enter_category_from_homepage(data(3, 0))
+        test4.choose_product_from_current_category_page(data(3, 1))
+        test4.choose_prod_color(data(3, 3))
+        test4.add_quantity_and_click_add(data(3, 2))
         test4.cart_page()
         self.assertEqual(self.driver.find_element_by_css_selector("[class='select  ng-binding']").text, "SHOPPING CART")
 
     def test5(self):
         # add a product with quantity = 3
         test5 = init_Actions_AOS(self.driver)
-        test5.enter_category_from_homepage("laptops")
-        test5.choose_product_from_current_category_page("10")
-        price1 = test5.calculate_product_price_with_quantity("3")
-        test5.choose_prod_color("GRAY")
+        test5.enter_category_from_homepage(data(4, 0))
+        test5.choose_product_from_current_category_page(data(4, 1))
+        price1 = test5.calculate_product_price_with_quantity(data(4, 2))
+        test5.choose_prod_color(data(4, 3))
 
-        test5.add_quantity_and_click_add("3")
+        test5.add_quantity_and_click_add(data(4, 2))
 
         # add a second product with quantity = 2
         test5.click_back()
-        test5.choose_product_from_current_category_page("7")
-        price2 = test5.calculate_product_price_with_quantity("2")
-        test5.add_quantity_and_click_add("2")
+        test5.choose_product_from_current_category_page(data(4, 4))
+        price2 = test5.calculate_product_price_with_quantity(data(4, 5))
+        test5.choose_prod_color(data(4, 6))
+        test5.add_quantity_and_click_add(data(4, 5))
+
 
         # add a third product with quantity = 2
         test5 = init_Actions_AOS(self.driver)
         test5.back_to_homepage()
-        test5.enter_category_from_homepage("mice")
-        test5.choose_product_from_current_category_page("30")
-        price3 = test5.calculate_product_price_with_quantity("2")
-        test5.add_quantity_and_click_add("2")
+        test5.enter_category_from_homepage(data(4, 7))
+        test5.choose_product_from_current_category_page(data(4, 8))
+        price3 = test5.calculate_product_price_with_quantity(data(4, 9))
+        test5.choose_prod_color(data(4, 10))
+        test5.add_quantity_and_click_add(data(4, 9))
 
         # move to cart page
         test5.cart_page()
@@ -264,7 +268,7 @@ class TestAOS(TestCase):
 
     def test10(self):
         test10 = init_Actions_AOS(self.driver)
-        test10.login("lol1234", "Lol1234")
+        test10.login(data(9, 0), data(9, 1))
         sleep(2)
         test10.click_user_icon()
         sign_out_button = self.driver.find_element_by_css_selector(

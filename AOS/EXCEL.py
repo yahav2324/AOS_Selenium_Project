@@ -1,9 +1,14 @@
 from openpyxl import load_workbook
 workbook = load_workbook(filename=r"C:\Users\yahav\Desktop\AOS test.xlsx")
 sheet = workbook.active
-category = []
-# category = sheet["C2:k2"].value
+def data(a, b):
+    tests = [[] for i in range(1, 11)]
+    i = 0
+    for col in sheet.iter_cols(min_col=3, max_col=12, min_row=2, max_row=25, values_only=True):
+        for field in col:
+            if field is not None:
+                tests[i].append(field)
+        i += 1
+    return tests[a][b]
 
-for row in sheet.iter_rows(min_row=2, max_row=2, min_col=3, max_col=11, values_only=True):
-    category += (row)
-print(category)
+

@@ -223,3 +223,5 @@ class init_Actions_AOS:
         self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '[translate="Thank_you_for_buying_with_Advantage"]')))
     def wait_cart_page_appear(self):
         self.wait.until(EC.visibility_of_element_located((By.ID, 'menuCart')))  # new
+    def wait_cancel_accept_checkbox(self):
+        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[class = 'checkboxText roboto-light animated']")))
