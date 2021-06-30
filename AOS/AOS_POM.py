@@ -25,8 +25,9 @@ class init_Actions_AOS:
         self.driver.find_element_by_name("confirm_passwordRegisterPage").send_keys(repassw)
         agree_conditions = self.driver.find_element_by_css_selector("[class = 'checkboxText roboto-light animated']")     # new
         self.driver.execute_script("arguments[0].click();", agree_conditions)
-        sleep(3) #  new
+        self.wait.until(EC.element_to_be_clickable((By.ID, "register_btnundefined")))
         self.driver.find_element_by_id("register_btnundefined").click()
+
 
     def click_user_icon(self):
         self.driver.find_element_by_id("menuUser").click()
@@ -65,6 +66,7 @@ class init_Actions_AOS:
         """choose a 'mastercredit' payment method, fills the fields and login 'mastercredit' account"""
         # The company of 'mastercredit' requires the first four digits: '4886'
         self.driver.find_element_by_name('masterCredit').click()
+        self.driver.find_element_by_id
         self.driver.find_element_by_id("creditCard").send_keys(card_number)
         self.driver.find_element_by_name("cvv_number").send_keys(CVV_number)
         month = Select(self.driver.find_element_by_name("mmListbox"))
@@ -73,7 +75,7 @@ class init_Actions_AOS:
         year.select_by_visible_text(YYYY)
         self.driver.find_element_by_name("cardholder_name").send_keys(cardholder_name)
         self.driver.find_element_by_name("save_master_credit").click()
-        sleep(3)
+        self.wait.until(EC.element_to_be_clickable((By.ID, "pay_now_btn_ManualPayment")))
         self.driver.find_element_by_id("pay_now_btn_ManualPayment").click()
 
 
@@ -98,6 +100,8 @@ class init_Actions_AOS:
             self.driver.find_element_by_name("quantity").send_keys(Keys.BACK_SPACE)
             self.driver.find_element_by_name("quantity").send_keys(5 + edit_number)
             self.driver.find_element_by_name("save_to_cart").click()
+            self.wait.until(
+                EC.invisibility_of_element_located((By.XPATH, '//li/tool-tip-cart/div/table/tfoot/tr/td/button')))
 
     def return_quantity_cart_products(self, number_of_products_in_cart):
         quantities = self.driver.find_elements_by_css_selector("[class='smollCell quantityMobile']")
@@ -125,9 +129,13 @@ class init_Actions_AOS:
         price = locale.atof(price.strip("$"))
         return int(Quantity) * float(price)
 
-    def convert_number_into_money_dollar_format(self, number):
+    def convert_numbers_to_money_form(self, number):
         locale.setlocale(locale.LC_ALL, 'English_United States.1252')
         return locale.currency(number, grouping=True)
+
+    def convers_money_to_number(self, money):
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF8')
+        return (locale.atof(money.strip("$")))
 
     def calculate_sum_price_of_cart(self, number_of_products_in_cart):
         prices = self.driver.find_elements_by_xpath("//td[@class='smollCell']/p")
@@ -146,9 +154,10 @@ class init_Actions_AOS:
         """
         # return self.driver.find_element_by_xpath("//tfoot[@colspan='2']/tr/td/span/label").text
         self.point_on_cart_icon()  # new
-        sleep(1)  # new
-        return self.driver.find_element_by_xpath('//li/tool-tip-cart/div/table/tfoot/tr/td/'
+        self.wait.until(EC.visibility_of_element_located((By.XPATH, '//td/span[@class="roboto-medium ng-binding"]')))
+        number_of_items = self.driver.find_element_by_xpath('//li/tool-tip-cart/div/table/tfoot/tr/td/'
                                                  'span/label[@class="roboto-regular ng-binding"]').text  # new
+        return number_of_items
 
     def add_quantity_and_click_add(self, num: str):
         self.driver.find_element_by_name("quantity").click()
